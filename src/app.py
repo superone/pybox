@@ -1,16 +1,17 @@
 #-*- encoding:utf-8 -*- 
 # @explain: 实现GET方法和POST方法请求
 import sys
+import os
 import globals as glb
 from  BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
 import urllib
 from utils.utils import utils
-import PyYAML as yaml
+import yaml
 
 glb._init()
 glb.set_value('argvs' , sys.argv)
 
-f = open("../config.yaml")
+f = open(os.path.abspath('.')+"\config.yaml")
 print yaml.load(f)
 
 class Pybox(BaseHTTPRequestHandler):    
