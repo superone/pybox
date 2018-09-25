@@ -1,10 +1,37 @@
 #-*- encoding:utf-8 -*- 
 # @explain: 实现GET方法和POST方法请求
- 
+import sys
+import globals as glb
 from  BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
 import urllib
- 
-class Pybox(BaseHTTPRequestHandler):
+from utils.utils import utils
+import PyYAML as yaml
+
+glb._init()
+glb.set_value('argvs' , sys.argv)
+
+f = open("../config.yaml")
+print yaml.load(f)
+
+class Pybox(BaseHTTPRequestHandler):    
+    def __init__(self, request, client_address, server):
+        self.portt = "portt"
+        self.request = request
+        self.client_address = client_address
+        self.server = server
+        self.setup()
+        try:
+            self.handle()
+        finally:
+            self.finish()
+        
+        print"argv length : " + sys.argv[0]
+        utils.read_config()
+        print glb.get_value('argvs')
+
+        print self.portt
+    # def __init__(self ,request, client_address, server):
+    #    print"init "
     def handle_one_request(self):
         """Handle a single HTTP request.
 
@@ -13,6 +40,7 @@ class Pybox(BaseHTTPRequestHandler):
         commands such as GET and POST.
 
         """
+        print "handle_one_request"
         try:
             self.raw_requestline = self.rfile.readline(65537)
             if len(self.raw_requestline) > 65536:
