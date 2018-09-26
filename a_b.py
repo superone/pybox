@@ -1,2 +1,2 @@
-def a:
+def a():
     print("it is a")

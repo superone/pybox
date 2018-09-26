@@ -1,3 +1,10 @@
 #-*- encoding:utf-8 -*-
-from b.b import a
-a()
+import sys
+reload(sys)
+import os
+
+exec()
+
+
+#__NSCFType
+#CIImage
