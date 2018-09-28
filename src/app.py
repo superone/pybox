@@ -11,7 +11,7 @@ import yaml
 glb._init()
 glb.set_value('argvs' , sys.argv)
 
-f = open(os.path.abspath('.')+"\config.yaml")
+f = open(os.path.join(os.path.abspath('.'),"config.yaml"))
 print yaml.load(f)
 
 class Pybox(BaseHTTPRequestHandler):    
