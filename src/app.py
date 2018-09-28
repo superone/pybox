@@ -11,8 +11,16 @@ import yaml
 glb._init()
 glb.set_value('argvs' , sys.argv)
 
-f = open(os.path.abspath('.')+"\config.yaml")
-print yaml.load(f)
+f = open( os.path.join( os.path.abspath('.') , "config.yaml"))
+sysconfig = yaml.load(f)
+
+sys.path.append(os.path.abspath('.') +'/'+ sysconfig['webrootdir'] + '/')
+print sys.path
+print os.path.exists( os.path.abspath('.') + '/wwwroot/home(r)-{}-get.py')
+#moduld = __import__('home(r)-{}-get')
+moduld = __import__('user.getinfo')
+
+print moduld.controller()
 
 class Pybox(BaseHTTPRequestHandler):    
     def __init__(self, request, client_address, server):
