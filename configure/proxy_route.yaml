@@ -1,5 +1,9 @@
 Proxys:
-    'ref#home':
+    'baidu' :
         url : 'https://www.baidu.com?{keyword}'
-        params : 
-          keyword : key
+        method : GET
+        trans : 
+            keyword : key
+    'user/' : 
+        url : 'https//domain/user/{user_id}'
+        method : GET

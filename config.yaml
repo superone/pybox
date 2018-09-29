@@ -11,3 +11,4 @@ Includes:
     - configure/root_route.yaml
     - configure/user_route.yaml
     - configure/proxy_route.yaml
+    - configure/mock_route.yaml

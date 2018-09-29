@@ -10,8 +10,8 @@ Routes:
     #     'middleware' : loginVerify
     #     'id' : home
     #也可以简写定义
-    '\user\{user_id},[get]' : 'index@{app}\user\index'
-    '\user\{user_id},[post]' : 'add@{app}\user\index'
+    'user/{user_id},[get]' : 'where:index@{app}\user\index | ref:userinfo'
+    'user/{user_id},[post]' : 'where:add@{app}\user\index | ref:useradd'
 
 # Middlewares:
 #     loginVerify : 
