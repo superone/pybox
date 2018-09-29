@@ -18,8 +18,13 @@ def merge_disc_by_key( dict1 , dict2 , key):
             for skey in dict2:
                 merge_disc_by_key( dict1[key] , dict2[key] , skey)
         else:
+            print dict1.has_key( key )
+            print key + "<=" + key
+            print dict2[key]
+            dict1.setdefault( key , '')
             dict1[key] = dict2[key]
     else:
+        dict1.setdefault( key , None)
         dict1[key] = dict2[key]
 
 
@@ -50,13 +55,14 @@ class Config(object):
         if conf.has_key('Includes'):
             for fl in conf['Includes']:
                 print '------------------'
-                # try:
-                tmp = open(os.path.join( approot , fl ))
-                tmp = yaml.load(tmp)
-                #print tmp
+                try:
+                    tmp = open(os.path.join( approot , fl ))
+                    tmp = yaml.load(tmp)
+                    #print tmp
+                except:
+                    print "Can't find config file:" + fl
+                    return
                 self.include_config(tmp)
-                # except:
-                #     print "Can't find config file:" + fl
         print '===================='
         print config_obj
     #获取原始配置数据
