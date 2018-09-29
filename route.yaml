@@ -8,9 +8,10 @@ Routes:
         'method' : index
         'controller' : '{app}controllars\home'
         'middleware' : loginVerify
-        'id' : home
+        'template' : home
+        'ref' : home
     #也可以简写定义
-    # '\|\home,[get]' : '{app}controllars\home | middleware:loginVerify'
+    '\|\home,[get]' : '{app}controllars\home | middleware:loginVerify'
     # '\user,[get]' : 'index@{app}\user\index'
     # '\user,[post]' : 'add@{app}\user\index'
 
@@ -19,7 +20,7 @@ Middlewares:
         controller : '{app}middle\login'
         method : verify
 Proxys:
-    '#home':
+    'ref#home':
         url : 'https://www.baidu.com?{keyword}'
         params : 
           keyword : key

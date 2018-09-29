@@ -11,8 +11,8 @@ Routes:
     #     'id' : home
     #也可以简写定义
     '\|\home,[get]' : '{app}controllars\home | middleware:loginVerify'
-    # '\user,[get]' : 'index@{app}\user\index'
-    # '\user,[post]' : 'add@{app}\user\index'
+    '\user,[get]' : 'index@{app}\user\index'
+    '\user,[post]' : 'add@{app}\user\index'
 
 # Middlewares:
 #     loginVerify : 

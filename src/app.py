@@ -1,5 +1,4 @@
 #-*- encoding:utf-8 -*- 
-# @explain: 实现GET方法和POST方法请求
 import sys
 import os
 import globals as glb
@@ -11,36 +10,35 @@ import urllib
 from utils.utils import utils
 import yaml
 
-f = open( os.path.join( os.path.abspath('.') , "route.yaml" ) )
-sysconfig = yaml.load(f)
-print app_config.get_ori_config('routes')
-#sys.path.append(os.path.join( os.path.abspath('.') , sysconfig['webrootdir']) )
-# print sys.path
-# print os.path.exists( os.path.join( os.path.abspath('.') , 'wwwroot/home(r)-{}-get.py'))
-# moduld = __import__('home(r)-{}-get')
-#moduld = __import__('user.getinfo')
+def run_route_method( requestHandler , ori_route ):
+    print"in run_route_method"
+    path = requestHandler.path#127.0.0.1:8000/wahaha提取出路径的后面部分
+    print path
+    #拆分url(也可根据拆分的url获取Get提交才数据),可以将不同的path和参数加载不同的html页面，或调用不同的方法返回不同的数据，来实现简单的网站或接口
+    query = urllib.splitquery(path)
+    print "query=",query
+    requestHandler.send_response(200)
+    requestHandler.send_header("Content-type","text/html")
+    requestHandler.send_header("test","This is test!")
+    requestHandler.end_headers()
 
-# print moduld.controller()
+
+    buf = '''<!DOCTYPE HTML>
+            <html>
+            <head><title>Get page</title></head>
+            <body>
+            
+            <form action="post_page" method="post">
+                usernameFF: <input type="text" name="username" /><br />
+                password: <input type="text" name="password" /><br />
+                <input type="submit" value="POST" />
+            </form>
+            
+            </body>
+            </html>'''
+    requestHandler.wfile.write(buf)
 
 class Pybox(BaseHTTPRequestHandler):
-    def __init__(self, request, client_address, server):
-        self.portt = "portt"
-        self.request = request
-        self.client_address = client_address
-        self.server = server
-        self.setup()
-        try:
-            self.handle()
-        finally:
-            self.finish()
-        
-        print"argv length : " + sys.argv[0]
-        utils.read_config()
-        print glb.get_value('argvs')
-
-        print self.portt
-    # def __init__(self ,request, client_address, server):
-    #    print"init "
     def handle_one_request(self):
         """Handle a single HTTP request.
 
@@ -49,7 +47,6 @@ class Pybox(BaseHTTPRequestHandler):
         commands such as GET and POST.
 
         """
-        print "handle_one_request"
         try:
             self.raw_requestline = self.rfile.readline(65537)
             if len(self.raw_requestline) > 65536:
@@ -68,8 +65,7 @@ class Pybox(BaseHTTPRequestHandler):
             if not hasattr(self, mname):
                 self.send_error(501, "Unsupported method (%r)" % self.command)
                 return
-            method = getattr(self, mname)
-            method()
+            run_route_method(self, mname)
             self.wfile.flush() #actually send the response if not already done.
         except socket.timeout, e:
             #a read or a write timed out.  Discard this connection
@@ -77,16 +73,6 @@ class Pybox(BaseHTTPRequestHandler):
             self.close_connection = 1
             return
     def do_GET(self):#针对GET请求方式的应答函数
-        print"----------------------------------GET----------------------------------"
-        path = self.path#127.0.0.1:8000/wahaha提取出路径的后面部分
-        print path
-        #拆分url(也可根据拆分的url获取Get提交才数据),可以将不同的path和参数加载不同的html页面，或调用不同的方法返回不同的数据，来实现简单的网站或接口
-        query = urllib.splitquery(path)
-        print "query=",query
-        self.send_response(200)
-        self.send_header("Content-type","text/html")
-        self.send_header("test","This is test!")
-        self.end_headers()
         buf = '''<!DOCTYPE HTML>
                 <html>
                 <head><title>Get page</title></head>
