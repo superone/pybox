@@ -1,5 +1,6 @@
 Routepath : routes
-Mockpath : webmock
+Mockpath : test\mock
+Staticpath : statics
 Templatepath : views
 
 Defined:

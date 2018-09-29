@@ -2,10 +2,12 @@ Routes:
     #这里是路由的相关配置
     #可以详细定义
     '\|\home,[get]' :
-        'where' : 'index@{app}controllars\home'
-        'middleware' : loginVerify
-        'template' : home
-        'ref' : home
+        ref : home
+        where : 'index@{app}controllars\home'
+        middleware : loginVerify
+        template : home
+        debug : true
+        mock : '{{Mockpath}}home.html'
     #也可以简写定义
     '\help,[get]': '{app}controllars\home | middleware:loginVerify'
 
