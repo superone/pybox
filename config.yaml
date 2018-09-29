@@ -1,5 +1,12 @@
-webrootdir : wwwroot
-mockdir : webmock
+Routepath : routes
+Mockpath : webmock
+Templatepath : views
+
+Defined:
+    root : wwwroot
+    app : app
+
 Includes:
-    - route.yaml
-    - route2.yaml
+    - configure/root_route.yaml
+    - configure/user_route.yaml
+    - configure/proxy_route.yaml

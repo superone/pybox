@@ -10,9 +10,8 @@ Routes:
     #     'middleware' : loginVerify
     #     'id' : home
     #也可以简写定义
-    '\|\home,[get]' : '{app}controllars\home | middleware:loginVerify'
-    '\user,[get]' : 'index@{app}\user\index'
-    '\user,[post]' : 'add@{app}\user\index'
+    '\user\{user_id},[get]' : 'index@{app}\user\index'
+    '\user\{user_id},[post]' : 'add@{app}\user\index'
 
 # Middlewares:
 #     loginVerify : 

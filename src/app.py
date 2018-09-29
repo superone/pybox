@@ -22,7 +22,6 @@ def run_route_method( requestHandler , ori_route ):
     requestHandler.send_header("test","This is test!")
     requestHandler.end_headers()
 
-
     buf = '''<!DOCTYPE HTML>
             <html>
             <head><title>Get page</title></head>
@@ -72,42 +71,6 @@ class Pybox(BaseHTTPRequestHandler):
             self.log_error("Request timed out: %r", e)
             self.close_connection = 1
             return
-    def do_GET(self):#针对GET请求方式的应答函数
-        buf = '''<!DOCTYPE HTML>
-                <html>
-                <head><title>Get page</title></head>
-                <body>
-                
-                <form action="post_page" method="post">
-                  username: <input type="text" name="username" /><br />
-                  password: <input type="text" name="password" /><br />
-                  <input type="submit" value="POST" />
-                </form>
-                
-                </body>
-                </html>'''
-        self.wfile.write(buf)
-        #GET方法对应的请求方式 curl -i 127.0.0.1:8000/wahaha
-    def do_POST(self):#针对post请求方式的应答函数
-        print"---------------------------------POST---------------------------------"
-        path = self.path
-        print path
-        #获取post提交的数据
-        datas = self.rfile.read(int(self.headers['content-length']))
-        datas = urllib.unquote(datas).decode("utf-8", 'ignore')
-        
-        self.send_response(200)
-        self.send_header("Content-type","text/html")
-        self.send_header("test","This is test!")
-        self.end_headers()
-        buf = '''<!DOCTYPE HTML>
-        <html>
-            <head><title>Post page</title></head>
-            <body>Post Data:%s  <br />Path:%s</body>
-        </html>'''%(datas,self.path)
-        self.wfile.write(buf)
-        #curl -l -H "Content-type: application/json" -X POST -d '{"phone":"13521389587","password":"test"}'  127.0.0.1:8000/wahaha
-    
     @staticmethod
     def start_server(port):
         print "web server listen at port " + str(port) + "..."
