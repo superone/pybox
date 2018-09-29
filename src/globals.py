@@ -8,7 +8,7 @@ def _init():
     _global_dict = {}
     
     set_value('argvs' , sys.argv)
-    set_value('config_file' , '/config.yaml')
+    set_value('config_file' , 'config.yaml')
     set_value('app_root' , os.path.abspath('.') )
 
 def set_value(name, value):

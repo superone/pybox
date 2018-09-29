@@ -3,23 +3,24 @@
 import sys
 import os
 import globals as glb
+glb._init()
+print glb.get_value('app_root')
+from config import sys_config
 from  BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
 import urllib
 from utils.utils import utils
 import yaml
 
-glb._init()
-
-f = open( os.path.join( os.path.abspath('.') , "config.yaml"))
+f = open( os.path.join( os.path.abspath('.') , "route.yaml" ))
 sysconfig = yaml.load(f)
-
-sys.path.append(os.path.join( os.path.abspath('.') , sysconfig['webrootdir']) )
-print sys.path
-print os.path.exists( os.path.join( os.path.abspath('.') , 'wwwroot/home(r)-{}-get.py'))
-moduld = __import__('home(r)-{}-get')
+print sys_config.get_ori_config('routes')
+#sys.path.append(os.path.join( os.path.abspath('.') , sysconfig['webrootdir']) )
+# print sys.path
+# print os.path.exists( os.path.join( os.path.abspath('.') , 'wwwroot/home(r)-{}-get.py'))
+# moduld = __import__('home(r)-{}-get')
 #moduld = __import__('user.getinfo')
 
-print moduld.controller()
+# print moduld.controller()
 
 class Pybox(BaseHTTPRequestHandler):    
     def __init__(self, request, client_address, server):
