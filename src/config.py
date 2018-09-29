@@ -1,10 +1,33 @@
+#-*- encoding:utf-8 -*- 
 import sys
 import os
 import globals as glb
 import yaml
+import copy
 
 config_obj = {}
 
+### Methods defined
+def method_a():
+    print 'in method a'
+
+def merge_disc_by_key( dict1 , dict2 , key):
+    print key
+    if isinstance(dict1 , dict):
+        if dict1.has_key( key ):
+            for skey in dict2:
+                merge_disc_by_key( dict1[key] , dict2[key] , skey)
+        else:
+            dict1[key] = dict2[key]
+    else:
+        dict1[key] = dict2[key]
+
+
+def reload_config():
+    app_config = Config()
+    return app_config
+
+#class defined
 class Config(object):
     def __init__(self):
         self._config = {}
@@ -20,18 +43,22 @@ class Config(object):
 
         tmp = {}
         for key in conf:
-            #合并include配置项
-            if key == 'Includes':
-                for fl in conf[key]:
-                    try:
-                        tmp = open(os.path.join( approot , fl ))
-                        tmp = yaml.load(tmp)
-                        self.include_config(tmp)
-                    except:
-                        print "Can't find config file:" + fl
-            else:
-                config_obj[ key ] = conf[key]
+            if key != 'Includes':
+                config_obj[ key ] = copy.deepcopy(conf[key])
 
+        #合并include配置项
+        if conf.has_key('Includes'):
+            for fl in conf['Includes']:
+                print '------------------'
+                # try:
+                tmp = open(os.path.join( approot , fl ))
+                tmp = yaml.load(tmp)
+                #print tmp
+                self.include_config(tmp)
+                # except:
+                #     print "Can't find config file:" + fl
+        print '===================='
+        print config_obj
     #获取原始配置数据
     def get_ori_config(self , key , defValue = None):
         try:
@@ -40,15 +67,8 @@ class Config(object):
             return defValue
 
     def include_config(self , conf = {}):
-        merge_disc_by_key( config_obj , conf)
+        for key in conf:
+            merge_disc_by_key( config_obj , conf , key)
 #end class
-
-### Methods defined
-def merge_disc_by_key( dict1 , dict2):
-    if isinstance(dict1 , dict):
-        for k in dict2:
-            if hasattr(dict1 , k):
-                merge_disc_by_key( dict1[k] , dict2[k])
-        pass
-
-sys_config = Config()
+    
+app_config = Config()

@@ -4,16 +4,16 @@ import sys
 import os
 import globals as glb
 glb._init()
-print glb.get_value('app_root')
-from config import sys_config
+
+from config import app_config
 from  BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
 import urllib
 from utils.utils import utils
 import yaml
 
-f = open( os.path.join( os.path.abspath('.') , "route.yaml" ))
+f = open( os.path.join( os.path.abspath('.') , "route.yaml" ) )
 sysconfig = yaml.load(f)
-print sys_config.get_ori_config('routes')
+print app_config.get_ori_config('routes')
 #sys.path.append(os.path.join( os.path.abspath('.') , sysconfig['webrootdir']) )
 # print sys.path
 # print os.path.exists( os.path.join( os.path.abspath('.') , 'wwwroot/home(r)-{}-get.py'))
@@ -22,7 +22,7 @@ print sys_config.get_ori_config('routes')
 
 # print moduld.controller()
 
-class Pybox(BaseHTTPRequestHandler):    
+class Pybox(BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
         self.portt = "portt"
         self.request = request

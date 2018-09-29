@@ -4,7 +4,7 @@ Defined:
 Routes:
     #这里是路由的相关配置
     #可以详细定义
-    '\[get]':
+    '\,[get]':
         'method' : index
         'controller' : '{app}controllars\home'
         'middleware' : loginVerify

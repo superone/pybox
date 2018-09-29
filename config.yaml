@@ -2,3 +2,4 @@ webrootdir : wwwroot
 mockdir : webmock
 Includes:
     - route.yaml
+    - route2.yaml
