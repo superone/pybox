@@ -5,6 +5,9 @@ import globals as glb
 import yaml
 import copy
 import pdb 
+import urllib2
+import re
+from utils.utils import split_by_sep
 
 config_obj = {}
 
@@ -32,6 +35,26 @@ def merge_disc_by_key( dict1 , dict2 , key):
 def reload_config():
     app_config = Config()
     return app_config
+
+
+def analy_key( r_key):
+    # re.findall(r"a(.+?)b", str)
+    ret = {}
+    s = r_key.replace(' ' , '')
+    methods = re.findall(r"\[(.+?)\]" , r_key)
+    s = s.split(',')
+    s = s[0]
+
+    if( len(methods) > 0):
+        methods = methods[0]
+    else:
+        methods = ""
+    methods = split_by_sep( methods , ',')
+    s = split_by_sep (s , '|')
+    ret['route'] = s
+    ret['methods'] = methods
+    # print ret
+    return ret
 
 #class defined
 class Config(object):
@@ -78,6 +101,28 @@ class Config(object):
     def include_config(self , conf = {}):
         for key in conf:
             merge_disc_by_key( config_obj , conf , key)
+
+    def get_key( self , key):
+        if config_obj.has_key(key):
+            return copy.deepcopy(config_obj[key])
+        return None
+
+    def route_config_by_request( self , request):
+        path = request['path']
+        path = path.strip()
+        path = path.strip('/')
+        path = path.strip()
+        path = path.split('/')
+
+        routes = config_obj['Routes']
+        mocks = config_obj['Mockroute']
+        proxys = config_obj['Proxys']
+
+        for k in routes:
+            ro = analy_key( k )
+            pass
+        print request
+        return None
 #end class
 
 app_config = Config()

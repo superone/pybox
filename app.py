@@ -9,4 +9,4 @@ from  src.app import Pybox
 
 
 if __name__ == "__main__":
-    Pybox.start_server(8000)
+    Pybox.start_server()
