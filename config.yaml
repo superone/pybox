@@ -1,7 +1,10 @@
+Port : 8000
 Routepath : routes
 Mockpath : test\mock
 Staticpath : statics
 Templatepath : views
+
+Whatchupdate : false
 
 Defined:
     root : wwwroot

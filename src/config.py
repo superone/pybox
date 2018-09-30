@@ -26,8 +26,6 @@ def merge_disc_by_key( dict1 , dict2 , key):
                 dict1.setdefault( key , '')
             dict1[key] = dict2[key]
     else:
-
-        # dict1.setdefault( key , None)
         dict1[key] = dict2[key]
 
 
@@ -55,8 +53,8 @@ class Config(object):
             if key != 'Includes':
                 config_obj[ key ] = copy.deepcopy(conf[key])
 
-        print config_obj
-        #合并include配置项
+        # print config_obj
+        # 合并include配置项
         if conf.has_key('Includes'):
             for fl in conf['Includes']:
                 try:
@@ -66,9 +64,9 @@ class Config(object):
                     print "Can't find config file:" + fl
                     return
                 self.include_config(tmp)
-        print '===================='
-        print config_obj
-        print '===================='
+        # print '===================='
+        # print config_obj
+        # print '===================='
         print '...Done'
     #获取原始配置数据
     def get_ori_config(self , key , defValue = None):
@@ -81,5 +79,5 @@ class Config(object):
         for key in conf:
             merge_disc_by_key( config_obj , conf , key)
 #end class
-    
+
 app_config = Config()
