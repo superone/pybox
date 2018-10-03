@@ -36,8 +36,8 @@ def reload_config():
     app_config = Config()
     return app_config
 
-
-def analy_key( r_key):
+# 解析路由配置key值
+def analy_r_key( r_key):
     # re.findall(r"a(.+?)b", str)
     ret = {}
     s = r_key.replace(' ' , '')
@@ -55,6 +55,22 @@ def analy_key( r_key):
     ret['methods'] = methods
     # print ret
     return ret
+
+# 解析路由配置信息
+def analy_r_value( value ):
+    ret = {}
+    if isinstance( value , str):
+        value = value.replace(' ','')
+        value = split_by_sep( value , '|')
+        for v in value:
+            tmp = split_by_sep( v , ':')
+            tmp = tmp[0:2]
+            ret[tmp[0]] = tmp[1]
+    else:
+        ret = copy.deepcopy( value )
+    # print ret
+    return ret
+    pass
 
 #class defined
 class Config(object):
@@ -91,6 +107,7 @@ class Config(object):
         # print config_obj
         # print '===================='
         print '...Done'
+
     #获取原始配置数据
     def get_ori_config(self , key , defValue = None):
         try:
@@ -109,19 +126,19 @@ class Config(object):
 
     def route_config_by_request( self , request):
         path = request['path']
-        path = path.strip()
+        path = path.replace(' ','')
         path = path.strip('/')
-        path = path.strip()
-        path = path.split('/')
 
         routes = config_obj['Routes']
         mocks = config_obj['Mockroute']
         proxys = config_obj['Proxys']
 
         for k in routes:
-            ro = analy_key( k )
+            ro = analy_r_key( k )
+            ro['value'] = analy_r_value( routes[k] )
+            print ro
+            # if ro
             pass
-        print request
         return None
 #end class
 
