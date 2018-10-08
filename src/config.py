@@ -14,7 +14,7 @@ config_obj = {}
 ### Methods defined
 def method_a():
     print 'in method a'
-
+# 深度合并字典
 def merge_disc_by_key( dict1 , dict2 , key):
     # print key
     if isinstance(dict1 , dict):
@@ -30,18 +30,35 @@ def merge_disc_by_key( dict1 , dict2 , key):
             dict1[key] = dict2[key]
     else:
         dict1[key] = dict2[key]
-
-
+# 重新调入config
 def reload_config():
     app_config = Config()
     return app_config
-
 # 解析路由配置key值
 def analy_r_key( r_key):
     # re.findall(r"a(.+?)b", str)
     ret = {}
-    s = r_key.replace(' ' , '')
-    methods = re.findall(r"\[(.+?)\]" , r_key)
+    keys = keystr_analy( r_key )
+
+    methods = []
+    methods.extend( keys['methods'] )
+
+    refsKeys = trans_route_key( keys['route'] )
+    # print keys['methods']
+    # print refsKeys
+    # print methods
+    # print refsKeys['methods']
+    #keys = trans_route_key(s)
+    methods.extend( refsKeys['methods'] )
+    ret['route'] = refsKeys['route']
+    ret['methods'] = methods
+    # print ret
+    return ret
+# 解析路由字符串
+def keystr_analy( keystr ):
+    ret = {} 
+    s = keystr.replace(' ' , '')
+    methods = re.findall(r"\[(.+?)\]" , keystr)
     s = s.split(',')
     s = s[0]
 
@@ -51,11 +68,37 @@ def analy_r_key( r_key):
         methods = ""
     methods = split_by_sep( methods , ',')
     s = split_by_sep (s , '|')
+
     ret['route'] = s
     ret['methods'] = methods
+
     # print ret
     return ret
+# 解析路由list
+def trans_route_key( rt = [] ):
+    ret = {}
+    ret.setdefault( 'route' , [] )
+    ret.setdefault( 'methods' , [] )
+    
+    for v in rt:
+        if "#" in v:
+            tmp = split_by_sep( v , '#')
+            if cmp( tmp[0], "ref") == 0:
+                routes = config_obj['Routes']
+                for k in routes:
+                    ro = analy_r_value( routes[k] )
+                    if ro.has_key('ref') and cmp( ro['ref'], tmp[1]) == 0 :
+                        t = keystr_analy( k )
+                        ret['route'].extend( t['route'] )
+                        ret['methods'].extend( t['methods'] )
+                        break
+            # 有待定义
+            else:
+                ret['route'].extend( [v] )
+        else:
+            ret['route'].extend( [v] )
 
+    return ret
 # 解析路由配置信息
 def analy_r_value( value ):
     ret = {}
@@ -71,6 +114,14 @@ def analy_r_value( value ):
     # print ret
     return ret
     pass
+# 解析path
+def analy_path_str( pathstr ):
+    ret = []
+    if cmp( pathstr , '/') == 0:
+        ret = ['/']
+    else:
+        ret = split_by_sep( pathstr , '/')
+    return ret
 
 #class defined
 class Config(object):
@@ -82,7 +133,7 @@ class Config(object):
 
         try:
             conf = open(os.path.join( approot , configFile ))
-            conf = yaml.load(conf)
+            conf = yaml.safe_load(conf)
         except:
             print "Can't find config file:" + configFile
             return
@@ -98,7 +149,7 @@ class Config(object):
             for fl in conf['Includes']:
                 try:
                     tmp = open(os.path.join( approot , fl ))
-                    tmp = yaml.load(tmp)
+                    tmp = yaml.safe_load(tmp)
                 except:
                     print "Can't find config file:" + fl
                     return
@@ -129,17 +180,56 @@ class Config(object):
         path = path.replace(' ','')
         path = path.strip('/')
 
+        print request
+
         routes = config_obj['Routes']
         mocks = config_obj['Mockroute']
         proxys = config_obj['Proxys']
+        # 找出route mapping
+        for k in proxys:
+            ro = analy_r_key( k )
+            ro['value'] = analy_r_value( proxys[k] )
+            if self.mapping_check( request , ro):
+                print 'PROXYS:', ro
+                return ro
+
+        for k in mocks:
+            ro = analy_r_key( k )
+            ro['value'] = analy_r_value( mocks[k] )
+            if self.mapping_check( request , ro):
+                print 'MOCKS:', ro
+                return  ro
 
         for k in routes:
             ro = analy_r_key( k )
             ro['value'] = analy_r_value( routes[k] )
-            print ro
-            # if ro
-            pass
+            if self.mapping_check( request , ro):
+                print 'ROUTES:', ro
+                return ro
+
+        # print routes
+        # print mocks
+        # print proxys
         return None
+    
+    def mapping_check( self , req ,  ro ):
+        path = analy_path_str(req['path'])
+        route = ro['route']
+        ret = True
+        print route
+        for r in route:
+            t_path = analy_path_str( r )
+            if len(t_path) == len(path):
+                for i , t_v in enumerate(path):
+                    if cmp( t_v , t_path[i]) != 0:
+                        if '{' not in t_path[i] :
+                            ret = False
+                            break
+            else :
+                ret = False
+
+        return ret
+        
 #end class
 
 app_config = Config()

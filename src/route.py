@@ -24,7 +24,7 @@ class Route(object):
         # BaseHTTPRequestHandler.headers                 #请求的头
         # BaseHTTPRequestHandler.responses               #HTTP错误代码及对应错误信息的字典
 
-        self.routeConf = app_config.route_config_by_request( self.requestInfo ) 
+        self.routeConf = app_config.route_config_by_request( self.requestInfo )
         pass
 
     def run(self):

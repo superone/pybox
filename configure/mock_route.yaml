@@ -1,13 +1,13 @@
 Mockroute:
-    - 'ref#home':
+    'ref#home':
         where : '{{Mockpath}}home.html'
         type : html
-    - 'ref#userinfo' :
+    'ref#userinfo' :
         where : '{{Mockpath}}user/user_info.json'
         type : json
-    - 'ref#useradd' :
+    'ref#useradd' :
         where : 'add@{{Mockpath}}user/user.py'
         type : program
-    - '/user/{user_id},[delete]' :
+    '/user/{user_id},[delete]' :
         where : 'delete@{{Mockpath}}user/user.py'
         type : program

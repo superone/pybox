@@ -7,7 +7,7 @@ Routes:
         middleware : loginVerify
         template : home
     #也可以简写定义
-    'help,[get,post , post ,, delete]': 'where:{app}controllars\home | middleware:loginVerify'
+    'help/{D},[get,post , post ,, delete]': 'where:{app}controllars\home | middleware:loginVerify'
 
 Middlewares:
     loginVerify : 
