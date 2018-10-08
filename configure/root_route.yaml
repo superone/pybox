@@ -1,13 +1,13 @@
 Routes:
     #这里是路由的相关配置
     #可以详细定义
-    '/|home,[get]' :
+    '/|home' :
         ref : home
         where : 'index@{app}controllars\home'
         middleware : loginVerify
         template : home
     #也可以简写定义
-    'help/{D},[get,post , post ,, delete]': 'where:{app}controllars\home | middleware:loginVerify'
+    'help,[get,post , post ,, delete]': 'where:{app}controllars\home | middleware:loginVerify'
 
 Middlewares:
     loginVerify : 

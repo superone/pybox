@@ -67,7 +67,15 @@ def keystr_analy( keystr ):
     else:
         methods = ""
     methods = split_by_sep( methods , ',')
+    # 转换成大写
+    for i,m in enumerate(methods):
+        methods[i] = m.upper()
+
     s = split_by_sep (s , '|')
+
+    for i,v in enumerate(s):
+        if cmp(v,'/') != 0 :
+            s[i] = v.strip('/')
 
     ret['route'] = s
     ret['methods'] = methods
@@ -102,25 +110,40 @@ def trans_route_key( rt = [] ):
 # 解析路由配置信息
 def analy_r_value( value ):
     ret = {}
+    tret = {}
     if isinstance( value , str):
         value = value.replace(' ','')
         value = split_by_sep( value , '|')
         for v in value:
             tmp = split_by_sep( v , ':')
             tmp = tmp[0:2]
-            ret[tmp[0]] = tmp[1]
+            tret[tmp[0]] = tmp[1]
     else:
-        ret = copy.deepcopy( value )
+        tret = copy.deepcopy( value )
     # print ret
+    for k in tret:
+        if k in ['where']:
+            t_v = split_by_sep( tret[k] , "@" )
+            if len(t_v)>1:
+                ret['entry'] = t_v[0]
+                ret['controller'] = t_v[1]
+            else:
+                ret['entry'] = 'index'
+                ret['controller'] = t_v[0]
+            
+            pass
+        else:
+            ret[k] = tret[k]
+    print ret
     return ret
-    pass
 # 解析path
 def analy_path_str( pathstr ):
     ret = []
     if cmp( pathstr , '/') == 0:
         ret = ['/']
     else:
-        ret = split_by_sep( pathstr , '/')
+        tstr = pathstr.strip('/')
+        ret = split_by_sep( tstr , '/')
     return ret
 
 #class defined
@@ -186,26 +209,29 @@ class Config(object):
         mocks = config_obj['Mockroute']
         proxys = config_obj['Proxys']
         # 找出route mapping
-        for k in proxys:
-            ro = analy_r_key( k )
-            ro['value'] = analy_r_value( proxys[k] )
-            if self.mapping_check( request , ro):
-                print 'PROXYS:', ro
-                return ro
+        if proxys:
+            for k in proxys:
+                ro = analy_r_key( k )
+                ro['value'] = analy_r_value( proxys[k] )
+                if self.mapping_check( request , ro):
+                    print 'in PROXYS:', ro
+                    return ro
 
-        for k in mocks:
-            ro = analy_r_key( k )
-            ro['value'] = analy_r_value( mocks[k] )
-            if self.mapping_check( request , ro):
-                print 'MOCKS:', ro
-                return  ro
+        if mocks:
+            for k in mocks:
+                ro = analy_r_key( k )
+                ro['value'] = analy_r_value( mocks[k] )
+                if self.mapping_check( request , ro):
+                    print 'in MOCKS:', ro
+                    return  ro
 
-        for k in routes:
-            ro = analy_r_key( k )
-            ro['value'] = analy_r_value( routes[k] )
-            if self.mapping_check( request , ro):
-                print 'ROUTES:', ro
-                return ro
+        if routes:
+            for k in routes:
+                ro = analy_r_key( k )
+                ro['value'] = analy_r_value( routes[k] )
+                if self.mapping_check( request , ro):
+                    print 'in ROUTES:', ro
+                    return ro
 
         # print routes
         # print mocks
@@ -215,17 +241,28 @@ class Config(object):
     def mapping_check( self , req ,  ro ):
         path = analy_path_str(req['path'])
         route = ro['route']
-        ret = True
-        print route
-        for r in route:
+        ret = False
+
+        for index , r in enumerate(route):
+            is_r = True
             t_path = analy_path_str( r )
             if len(t_path) == len(path):
                 for i , t_v in enumerate(path):
                     if cmp( t_v , t_path[i]) != 0:
                         if '{' not in t_path[i] :
-                            ret = False
+                            is_r = False
                             break
             else :
+                is_r = False
+
+            if is_r:
+                ret = True
+                break
+
+        if req['command'].upper() not in ro['methods']:
+            if len(ro['methods']) == 0 or 'ALL' in ro['methods']:
+                pass
+            else:
                 ret = False
 
         return ret
