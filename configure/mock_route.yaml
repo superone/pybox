@@ -5,9 +5,9 @@ Mockroute:
     # 'ref#userinfo' :
     #     where : '{{Mockpath}}user/user_info.json'
     #     type : json
-    # 'ref#useradd' :
-    #     where : 'add@{{Mockpath}}user/user.py'
-    #     type : program
+    'ref#useradd' :
+        where : 'add@{{Mockpath}}user/user.py'
+        type : program
     # '/user/{user_id},[delete]' :
     #     where : 'delete@{{Mockpath}}user/user.py'
     #     type : program
