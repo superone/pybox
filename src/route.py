@@ -1,5 +1,7 @@
 #-*- encoding:utf-8 -*- 
 import urllib
+import sys
+from utils.utils import split_by_sep
 from config import app_config
 class Route(object):
     # request info
@@ -28,18 +30,32 @@ class Route(object):
         pass
 
     def run(self):
-        buf = '''<!DOCTYPE HTML>
-                <html>
-                <head><title>Get page</title></head>
-                <body>
-                <p>[[info]]</p>
-                <form action="post_page" method="post">
-                    usernameFF: <input type="text" name="username" /><br />
-                    password: <input type="text" name="password" /><br />
-                    <input type="submit" value="POST" />
-                </form>
-                
-                </body>
-                </html>'''
+        
+        if self.routeConf:
+            ctrl = self.routeConf['value']['controller']
+            ctrl = ctrl.replace('\\' , '/')
+            ctrl = split_by_sep( ctrl , '/')
+            s_path = '/'.join( ctrl[0:len(ctrl)-1 ] )
+            
+            sys.path.append( s_path )
+            m = __import__( ctrl[len(ctrl)-1] )
+            
+            t_ctrl = m.Ctrl()
+            r_method = getattr(t_ctrl , self.routeConf['value']['entry'])
+            buf = r_method(self.requestHandler , self.requestInfo) if r_method else ''
+        else:
+            buf = '''<!DOCTYPE HTML>
+                    <html>
+                    <head><title>Get page</title></head>
+                    <body>
+                    <p>[[info]]</p>
+                    <form action="post_page" method="post">
+                        usernameFF: <input type="text" name="username" /><br />
+                        password: <input type="text" name="password" /><br />
+                        <input type="submit" value="POST" />
+                    </form>
+                    
+                    </body>
+                    </html>'''
         buf = buf.replace("[[info]]" , str(self.requestInfo['query'][0]))
         return buf
