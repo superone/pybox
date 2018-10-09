@@ -1,6 +1,8 @@
 #-*- encoding:utf-8 -*- 
 import urllib
 import sys
+import importlib
+import imp
 from utils.utils import split_by_sep
 from config import app_config
 class Route(object):
@@ -38,8 +40,10 @@ class Route(object):
             s_path = '/'.join( ctrl[0:len(ctrl)-1 ] )
             
             sys.path.append( s_path )
-            m = __import__( ctrl[len(ctrl)-1] )
-            
+            # m = __import__( ctrl[len(ctrl)-1] )
+            m = importlib.import_module( ctrl[len(ctrl)-1] )
+            m = imp.reload(m)
+            # m = importlib.reload(m)
             t_ctrl = m.Ctrl()
             r_method = getattr(t_ctrl , self.routeConf['value']['entry'])
             buf = r_method(self.requestHandler , self.requestInfo) if r_method else ''

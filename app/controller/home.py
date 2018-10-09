@@ -10,7 +10,7 @@ class Ctrl(Controller):
                     <html>
                     <head><title>Get page</title></head>
                     <body>
-                        <h1>I am [[info]].<br>haha</h1>
+                        <h1>I am [[info]].<br>kao</h1>
                     </body>
                     </html>'''
     
