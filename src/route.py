@@ -28,18 +28,21 @@ class Route(object):
         pass
 
     def run(self):
-        buf = '''<!DOCTYPE HTML>
-                <html>
-                <head><title>Get page</title></head>
-                <body>
-                <p>[[info]]</p>
-                <form action="post_page" method="post">
-                    usernameFF: <input type="text" name="username" /><br />
-                    password: <input type="text" name="password" /><br />
-                    <input type="submit" value="POST" />
-                </form>
-                
-                </body>
-                </html>'''
+        if not self.routeConf:
+            buf = '''<!DOCTYPE HTML>
+                    <html>
+                    <head><title>Get page</title></head>
+                    <body>
+                        <h1>Can't find page.</h1>
+                    </body>
+                    </html>'''
+        else:
+            buf = '''<!DOCTYPE HTML>
+                    <html>
+                    <head><title>Get page</title></head>
+                    <body>
+                        <h1>[[info]]</h1>
+                    </body>
+                    </html>'''
         buf = buf.replace("[[info]]" , str(self.requestInfo['query'][0]))
         return buf

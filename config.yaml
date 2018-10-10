@@ -9,6 +9,7 @@ Whatchupdate : false
 Defined:
     root : wwwroot
     app : app
+    controller : app/controller
 
 Includes:
     - configure/root_route.yaml
