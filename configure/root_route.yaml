@@ -3,7 +3,7 @@ Routes:
     #可以详细定义
     '/|home' :
         ref : home
-        where : 'index@{controller}\home'
+        where : 'index@{app}controller\home'
         middleware : loginVerify
         template : home
     #也可以简写定义

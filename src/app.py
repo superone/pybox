@@ -1,5 +1,7 @@
 #-*- encoding:utf-8 -*- 
 import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 import os
 import globals as glb
 glb._init()

@@ -141,6 +141,7 @@ def analy_r_value( value ):
             ori_defs = app_config.get_key('Defined')
             if ori_defs.has_key( k ):
                 ret['controller'] = ret['controller'].replace('{'+k+'}' , ori_defs[k] + '\\')
+                
         # ret['controller']
     return ret
 # 解析path
