@@ -6,7 +6,7 @@ sys.path.append(".")
 sys.path.append("src")
 
 from  BaseHTTPServer import HTTPServer
-from  src.app import Pybox
+from  src.app_wsgi import Pybox
 
 
 if __name__ == "__main__":

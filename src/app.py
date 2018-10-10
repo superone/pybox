@@ -6,6 +6,10 @@ import os
 import globals as glb
 glb._init()
 
+from werkzeug import Request as RequestBase, Response as ResponseBase, \
+     LocalStack, LocalProxy, create_environ, cached_property, \
+     SharedDataMiddleware
+
 from config import app_config
 from  BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
 import urllib
@@ -70,3 +74,13 @@ class Pybox(BaseHTTPRequestHandler):
         print "web server listen at port " + str(port) + "..."
         http_server = HTTPServer(('', int(port)), Pybox)#HTTPServer绑定对应的应答类ServerHTTP
         http_server.serve_forever()
+
+# from werkzeug.wrappers import Request, Response
+
+# @Request.application
+# def application(request):
+#     return Response('Hello, World!')
+
+# if __name__ == '__main__':
+#     from werkzeug.serving import run_simple
+#     run_simple('localhost', 4000, application)
